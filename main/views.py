@@ -14,13 +14,14 @@ def finish(request):
         if request.POST['action'] == 'Анализировать иерархию':
             answers_criteria_list = request.POST.getlist('select', [])
             answers_variants_list = request.POST.getlist('select2', [])
+            len_criteria = request.POST.getlist('len_criteria', [])
             print(answers_variants_list)
             print(answers_variants_list)
             user = request.user.username
             outvariants = request.POST.get('outvariantslala')
             outcriteria = request.POST.get('outcriterialala')
             print(outvariants, 'django')
-            if len(answers_variants_list) == 0 or len(answers_criteria_list) == 0:
+            if len(answers_variants_list) == 0 or len(answers_criteria_list) == 0 or len_criteria[0] == '' or len_criteria == None:
                 error2 = 'Для начала добавьте критерии и варианты!'
                 return render(request, 'main/index.html', context={'error2': error2} )
             print(outvariants, "this is outvariants from def finish")
@@ -29,7 +30,7 @@ def finish(request):
             
             for i, elem in enumerate(answers_criteria_list):
                 answers_criteria_list[i] = float(elem)
-            len_criteria = request.POST.getlist('len_criteria', [])
+            
             for i, elem in enumerate(len_criteria):
                 len_criteria[i] = int(elem)
             len_criteria = len_criteria[0]
@@ -160,16 +161,20 @@ def finish(request):
                 a="Успешно сохранено!"
                 return render(request, "main/index.html", context={"message":a})
             else:
-	            request.session['selection_name'] = request.POST.get('selection_name')
-	            form = History.objects.create(name = request.session['selection_name'] ,user=request.user.username, criterian = request.session['criterian'],variants=request.session['variants'], selection_result=request.session['res'])
-	            form.save()
-	            a="Успешно сохранено!"
-	            del request.session['selection_name']
-	            del request.session['res']
-	            del request.session['variants']
-	            del request.session['criterian']
-	            return render(request, "main/index.html", context={"message":a})
-    return render(request, "main/index.html")
+                request.session['selection_name'] = request.POST.get('selection_name')
+                form = History.objects.create(name = request.session['selection_name'] ,user=request.user.username, criterian = request.session['criterian'],variants=request.session['variants'], selection_result=request.session['res'])
+                form.save()
+                a="Успешно сохранено!"
+                del request.session['selection_name']
+                del request.session['res']
+                del request.session['variants']
+                del request.session['criterian']
+                return render(request, "main/index.html", context={"message":a})
+    return render(request, "main/index.html", context={'criteria_matrix': criterias_koef, 'big_matrix': big_matrix,
+                                   'res': request.session['res'], 'raiting': lslist,
+                                   'outvariants': request.session['variants'],
+                                   'outcriterian': request.session['criterian'],
+                                   "user": user , "message_out":message_out})
 
 
 def index(request):

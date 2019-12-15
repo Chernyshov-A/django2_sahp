@@ -36,6 +36,7 @@
     </div>
     </div>
     </form>
+    {% csrf_token %}
     <div class="container">
         <p class="h5" style="color: rgba(200, 70, 19, 1)">{{error}}</p>
     </div>
@@ -189,6 +190,7 @@
             </div>
         </div>
 </form>
+{% csrf_token %}
 <div class="container" style="width: 600px;">
 <table class="table table-striped table-dark">
         <th>Вариант</th>
@@ -283,5 +285,5 @@
 });
 </script>
 
-</div>>
+</div>
 {%endblock %}
